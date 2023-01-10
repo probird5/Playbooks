@@ -25,7 +25,7 @@
       key: "{{ lookup('file', '/home/joe/keys/'+ item + '.pub') }}"
     with_items: "{{ required_users }}"
 
-  - name: Give sudo access to vumetric group
+  - name: Give sudo access to midgar group
     blockinfile:
       path: /etc/sudoers
       insertafter: 'root    ALL=(ALL)       ALL'
