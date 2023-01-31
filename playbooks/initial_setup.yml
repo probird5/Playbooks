@@ -1,0 +1,30 @@
+- hosts: servers
+  become: yes
+
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
+        upgrade: 'yes'
+
+    - name: installing packages
+      apt:
+        name:
+          - tmux
+          - net-tools
+          - vim
+          - zsh
+        state: present
+        update_cache: true
+      become: true
+
+# want to implement a dot file to grab my .zshrc
+
+
+# need to run "ansible-galaxy install gantsign.oh-my-zsh" first.
+  roles: 
+    - role: gantsign.oh-my-zsh
+      users:
+        - username: # Enter your username her
+        
+    
