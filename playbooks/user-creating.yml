@@ -1,0 +1,33 @@
+- hosts: servers
+  become: yes
+
+  vars:
+  - required_users: ['joe, bob, tim']
+
+  tasks:
+  - name: Create group
+    group:
+      name: midgar
+      state: present
+
+  - name: Add required users
+    user:
+      name: "{{ item }}"
+      shell: /bin/bash
+      groups : "midgar"
+      state: present
+    with_items: "{{ required_users }}"
+
+  - name: add SSH public keys
+    authorized_key:
+      user: "{{ item }}"
+      state: present
+      key: "{{ lookup('file', '/home/joe/keys/'+ item + '.pub') }}"
+    with_items: "{{ required_users }}"
+
+  - name: Give sudo access to midgar group
+    blockinfile:
+      path: /etc/sudoers
+      insertafter: 'root    ALL=(ALL)       ALL'
+      block: |
+        %midgar        ALL=(ALL)       NOPASSWD: ALL
