@@ -13,6 +13,7 @@
           - tmux
           - net-tools
           - vim
+          - gcc
           - zsh
           - git
         state: present
