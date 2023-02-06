@@ -12,6 +12,7 @@
         name:
           - tmux
           - net-tools
+          - curl
           - vim
           - gcc
           - zsh
