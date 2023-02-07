@@ -21,7 +21,8 @@
         update_cache: true
       become: true
 
-# want to implement a dot file to grab my .zshrc
+# want to add all my dotfiles
+# Also want to git clone tmux plugin manager
 
 
 # need to run "ansible-galaxy install gantsign.oh-my-zsh" first.
