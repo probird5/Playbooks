@@ -1,0 +1,21 @@
+- name: Add user to sudoers
+  hosts: localhost
+  become: yes
+  vars:
+    username: test  # Replace with your actual username
+
+  tasks:
+    - name: Ensure user is present
+      ansible.builtin.user:
+        name: "{{ username }}"
+        state: present
+        # Add other user parameters as needed (e.g., groups, shell, etc.)
+
+    - name: Ensure user is in sudoers file
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ username }}'
+        line: '{{ username }} ALL=(ALL:ALL) NOPASSWD:ALL'
+        validate: 'visudo -cf %s'
+
