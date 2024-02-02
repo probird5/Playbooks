@@ -219,9 +219,9 @@
         dest: /tmp/ttf-icomoon-feather.tar.gz
         mode: '0440'
 
-    - name: Ensure /tmp/tff-icomoon-feather directory exists
+    - name: Ensure /tmp/ttf-icomoon-feather directory exists
       ansible.builtin.file:
-        path: /tmp/tff-icomoon-feather
+        path: /tmp/ttf-icomoon-feather
         state: directory
         recurse: yes
 
