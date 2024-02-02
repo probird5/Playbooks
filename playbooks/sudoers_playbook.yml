@@ -2,7 +2,7 @@
   hosts: localhost
   become: yes
   vars:
-    username: test  # Replace with your actual username
+    username: your_username  # Replace with your actual username
 
   tasks:
     - name: Ensure user is present
@@ -16,6 +16,6 @@
         path: /etc/sudoers
         state: present
         regexp: '^{{ username }}'
-        line: '{{ username }} ALL=(ALL:ALL) NOPASSWD:ALL'
+        line: '{{ username }} ALL=(ALL:ALL) ALL'
         validate: 'visudo -cf %s'
 
