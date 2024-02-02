@@ -30,7 +30,7 @@
         repo: 'https://github.com/probird5/dotfiles'
         dest: ~/dotfiles
         version: master
-      become_user: your_username # specify the user
+      become_user: test # specify the user
 
     # Alacritty
     - name: Ensure alacritty config directory exists
