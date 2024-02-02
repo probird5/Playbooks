@@ -27,7 +27,7 @@
           - tree
           - unzip
           - xorg
-          - clip
+          - xclip
         state: present
 
     # Clone dotfiles repository
