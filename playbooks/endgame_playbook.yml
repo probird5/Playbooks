@@ -26,6 +26,8 @@
           - rofi
           - tree
           - unzip
+          - xorg
+          - clip
         state: present
 
     # Clone dotfiles repository
