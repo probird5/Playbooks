@@ -191,6 +191,13 @@
         dest: /tmp/JetBrainsMono.zip
         mode: '0440'
 
+    - name: Ensure /tmp/JetBrainsMono/ directory exists
+      ansible.builtin.file:
+        path: /tmp/JetBrainsMono
+        state: directory
+        recurse: yes
+
+
     # Unzip JetBrainsMono Font
     - name: Unzip JetBrainsMono Font
       ansible.builtin.unarchive:
@@ -211,6 +218,12 @@
         url: 'https://aur.archlinux.org/cgit/aur.git/snapshot/ttf-icomoon-feather.tar.gz'
         dest: /tmp/ttf-icomoon-feather.tar.gz
         mode: '0440'
+
+    - name: Ensure /tmp/tff-icomoon-feather directory exists
+      ansible.builtin.file:
+        path: /tmp/tff-icomoon-feather/
+        state: directory
+        recurse: yes
 
     - name: Unzip Icomoon Feather Font
       ansible.builtin.unarchive:
