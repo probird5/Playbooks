@@ -1,0 +1,261 @@
+- name: Bootstrap development environment
+  hosts: localhost
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install packages with apt
+      become: yes
+      ansible.builtin.apt:
+        name:
+          - git
+          - tmux
+          - zsh
+          - alacritty
+          - i3
+          - kitty
+          - neofetch
+          - picom
+          - polybar
+          - rofi
+          - tree
+        state: present
+        update_cache: yes
+        state: present
+  # Clone dotfiles repository
+    - name: Clone dotfiles repository
+      ansible.builtin.git:
+        repo: 'https://github.com/probird5/dotfiles'
+        dest: ~/dotfiles
+        version: master
+      become_user: your_username # specify the user
+
+    # Alacritty
+    - name: Ensure alacritty config directory exists
+      ansible.builtin.file:
+        path: ~/.config/alacritty
+        state: directory
+
+    - name: Copy alacritty configuration
+      ansible.builtin.copy:
+        src: ~/dotfiles/alacritty/alacritty.yml
+        dest: ~/.config/alacritty/alacritty.yml
+
+    # i3
+    - name: Ensure i3 config directory exists
+      ansible.builtin.file:
+        path: ~/.config/i3
+        state: directory
+
+    - name: Copy i3 configuration
+      ansible.builtin.copy:
+        src: ~/dotfiles/i3/config
+        dest: ~/.config/i3/config
+
+    # kitty
+    - name: Ensure kitty config directory exists
+      ansible.builtin.file:
+        path: ~/.config/kitty
+        state: directory
+
+    - name: Copy kitty configuration
+      ansible.builtin.copy:
+        src: ~/dotfiles/kitty/kitty.conf
+        dest: ~/.config/kitty/kitty.conf
+
+    # Neofetch
+    - name: Ensure neofetch config directory exists
+      ansible.builtin.file:
+        path: ~/.config/neofetch
+        state: directory
+
+    - name: Copy neofetch configuration
+      ansible.builtin.copy:
+        src: ~/dotfiles/neofetch/config.conf
+        dest: ~/.config/neofetch/config.conf
+
+    # Neovim
+    - name: Ensure nvim config directory exists
+      ansible.builtin.file:
+        path: ~/.config/nvim
+        state: directory
+
+    - name: Copy nvim init file
+      ansible.builtin.copy:
+        src: ~/dotfiles/nvim/init.lua
+        dest: ~/.config/nvim/init.lua
+
+    - name: Ensure nvim lua directory exists
+      ansible.builtin.file:
+        path: ~/.config/nvim/lua
+        state: directory
+
+    - name: Copy nvim lua directory
+      ansible.builtin.copy:
+        src: ~/dotfiles/nvim/lua/
+        dest: ~/.config/nvim/lua/
+        directory_mode: yes
+
+    # Picom
+    - name: Ensure picom config directory exists
+      ansible.builtin.file:
+        path: ~/.config/picom
+        state: directory
+
+    - name: Copy picom configuration
+      ansible.builtin.copy:
+        src: ~/dotfiles/picom/picom.conf
+        dest: ~/.config/picom/picom.conf
+
+    # Polybar
+    - name: Ensure polybar config directory exists
+      ansible.builtin.file:
+        path: ~/.config/polybar
+        state: directory
+
+    - name: Copy polybar configuration directory
+      ansible.builtin.copy:
+        src: ~/dotfiles/polybar/
+        dest: ~/.config/polybar/
+        directory_mode: yes
+
+    # Rofi
+    - name: Ensure rofi config directory exists
+      ansible.builtin.file:
+        path: ~/.config/rofi
+        state: directory
+
+    - name: Copy rofi configuration
+      ansible.builtin.copy:
+        src: ~/dotfiles/rofi/config.rasi
+        dest: ~/.config/rofi/config.rasi
+
+    - name: Copy rofi powermenu
+      ansible.builtin.copy:
+        src: ~/dotfiles/rofi/powermenu.rasi
+        dest: ~/.config/rofi/powermenu.rasi
+
+    # Backgrounds
+    - name: Ensure backgrounds directory exists
+      ansible.builtin.file:
+        path: ~/Pictures/backgrounds
+        state: directory
+
+    - name: Copy backgrounds
+      ansible.builtin.copy:
+        src: ~/dotfiles/background/
+        dest: ~/Pictures/backgrounds/
+        directory_mode: yes
+     # Ensure the font directory exists
+    - name: Ensure font directory exists
+      ansible.builtin.file:
+        path: ~/.local/share/fonts
+        state: directory
+
+    # Download Iosevka Font Zip
+    - name: Download Iosevka Font Zip
+      ansible.builtin.get_url:
+        url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Iosevka.zip'
+        dest: /tmp/Iosevka.zip
+        mode: '0440'
+
+    # Unzip Iosevka Font
+    - name: Unzip Iosevka Font
+      ansible.builtin.unarchive:
+        src: /tmp/Iosevka.zip
+        dest: /tmp/Iosevka/
+        remote_src: yes
+
+    # Move Iosevka Fonts to Fonts Directory
+    - name: Move Iosevka Fonts to Fonts Directory
+      ansible.builtin.copy:
+        src: /tmp/Iosevka/
+        dest: ~/.local/share/fonts
+        remote_src: yes
+
+    # Download JetBrainsMono Font Zip
+    - name: Download JetBrainsMono Font Zip
+      ansible.builtin.get_url:
+        url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip'
+        dest: /tmp/JetBrainsMono.zip
+        mode: '0440'
+
+    # Unzip JetBrainsMono Font
+    - name: Unzip JetBrainsMono Font
+      ansible.builtin.unarchive:
+        src: /tmp/JetBrainsMono.zip
+        dest: /tmp/JetBrainsMono/
+        remote_src: yes
+
+    # Move JetBrainsMono Fonts to Fonts Directory
+    - name: Move JetBrainsMono Fonts to Fonts Directory
+      ansible.builtin.copy:
+        src: /tmp/JetBrainsMono/
+        dest: ~/.local/share/fonts
+        remote_src: yes
+
+    # Downloading the Icomoon feather font
+    - name: Download Icomoon Feather Font
+      ansible.builtin.get_url:
+        url: 'https://aur.archlinux.org/cgit/aur.git/snapshot/ttf-icomoon-feather.tar.gz'
+        dest: /tmp/ttf-icomoon-feather.tar.gz
+        mode: '0440'
+
+    - name: Unzip Icomoon Feather Font
+      ansible.builtin.unarchive:
+        src: /tmp/ttf-icomoon-feather.tar.gz
+        dest: /tmp/ttf-icomoon-feather/
+        remote_src: yes
+
+    - name: Move Icomoon Feather Fonts to Fonts Directory
+      ansible.builtin.copy:
+        src: /tmp/ttf-icomoon-feather/
+        dest: ~/.local/share/fonts
+        remote_src: yes
+
+    - name: Copy .tmux directory and its contents
+      ansible.builtin.copy:
+        src: ~/dotfiles/.tmux/
+        dest: ~/.tmux/
+        directory_mode: yes
+
+    - name: Copy .tmux.conf
+      ansible.builtin.copy:
+        src: ~/dotfiles/.tmux.conf
+        dest: ~/.tmux.conf
+
+    - name: Copy .xinitrc
+      ansible.builtin.copy:
+        src: ~/dotfiles/.xinitrc
+        dest: ~/.xinitrc
+
+    - name: Copy .Xresources
+      ansible.builtin.copy:
+        src: ~/dotfiles/.Xresources
+        dest: ~/.Xresources
+
+    - name: Copy .zshrc
+      ansible.builtin.copy:
+        src: ~/dotfiles/.zshrc
+        dest: ~/.zshrc
+    - name: Ensure tpm is cloned
+      ansible.builtin.git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: ~/.tmux/plugins/tpm
+        version: master
+      become_user: your_username
+
+    - name: Install tmux plugins using tpm
+      ansible.builtin.shell: |
+        tmux start-server
+        tmux new-session -d
+        sleep 1
+        tmux source ~/.tmux.conf
+        sleep 1
+        tmux kill-server
+      become_user: your_username
+      args:
+        executable: /bin/bash
+
