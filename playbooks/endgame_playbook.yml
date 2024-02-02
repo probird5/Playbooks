@@ -29,7 +29,6 @@
       ansible.builtin.git:
         repo: 'https://github.com/probird5/dotfiles'
         dest: ~/dotfiles
-        version: master
       become_user: test # specify the user
 
     # Alacritty
