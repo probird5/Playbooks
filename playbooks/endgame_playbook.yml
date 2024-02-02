@@ -21,6 +21,7 @@
           - polybar
           - rofi
           - tree
+          - unzip
         state: present
         update_cache: yes
         state: present
@@ -159,6 +160,11 @@
         url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Iosevka.zip'
         dest: /tmp/Iosevka.zip
         mode: '0440'
+    - name: Ensure /tmp/Iosevka directory exists
+      ansible.builtin.file:
+        path: /tmp/Iosevka
+        state: directory
+        recurse: yes  # This ensures the entire directory path is created
 
     # Unzip Iosevka Font
     - name: Unzip Iosevka Font
