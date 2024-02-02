@@ -221,14 +221,14 @@
 
     - name: Ensure /tmp/tff-icomoon-feather directory exists
       ansible.builtin.file:
-        path: /tmp/tff-icomoon-feather/
+        path: /tmp/tff-icomoon-feather
         state: directory
         recurse: yes
 
     - name: Unzip Icomoon Feather Font
       ansible.builtin.unarchive:
         src: /tmp/ttf-icomoon-feather.tar.gz
-        dest: /tmp/ttf-icomoon-feather/
+        dest: /tmp/ttf-icomoon-feather
         remote_src: yes
 
     - name: Move Icomoon Feather Fonts to Fonts Directory
