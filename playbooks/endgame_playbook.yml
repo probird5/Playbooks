@@ -33,7 +33,6 @@
       ansible.builtin.git:
         repo: 'https://github.com/probird5/dotfiles'
         dest: /home/{{ username }}/dotfiles
-      become_user: {{ username }}
 
     # Alacritty
     - name: Ensure alacritty config directory exists
@@ -256,7 +255,6 @@
         repo: https://github.com/tmux-plugins/tpm
         dest: /home/{{ username }}/.tmux/plugins/tpm
         version: master
-      become_user: {{ username }}
 
     - name: Install tmux plugins using tpm
       ansible.builtin.shell: |
@@ -266,7 +264,6 @@
         tmux source /home/{{ username }}/.tmux.conf
         sleep 1
         tmux kill-server
-      become_user: {{ username }}
       args:
         executable: /bin/bash
 
