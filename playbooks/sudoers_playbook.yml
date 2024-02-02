@@ -2,7 +2,7 @@
   hosts: localhost
   become: yes
   vars:
-    username: your_username  # Replace with your actual username
+    username: test  # Replace with your actual username
 
   tasks:
     - name: Ensure user is present
