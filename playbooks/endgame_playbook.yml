@@ -269,8 +269,8 @@
       ansible.builtin.file:
         path: /home/{{ username }}
         state: directory
-        owner: {{ username }}
-        group: {{ username }}
+        owner: "{{ username }}"
+        group: "{{ username }}"
       become: yes
 
     - name: Set executable permissions for dotfiles
