@@ -171,14 +171,18 @@
         src: /home/{{ username }}/dotfiles/.zshrc
         dest: /home/{{ username }}/.zshrc
 
-    - name: Change ownership of all files and subdirectories in user's home directory
+    - name: Find all files and directories in user's home directory
+      ansible.builtin.find:
+        paths: "/home/{{ username }}"
+        recurse: yes
+      register: files_and_directories
+
+    - name: Change ownership of all files and directories in user's home directory
       ansible.builtin.file:
-        path: "/home/{{ username }}/{{ item }}"
+        path: "{{ item.path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
-        recurse: yes
-      with_fileglob:
-        - "/home/{{ username }}/*"
+      with_items: "{{ files_and_directories.files }}"
       become: yes
 
     - name: Ensure tpm is cloned
