@@ -171,21 +171,42 @@
         src: /home/{{ username }}/dotfiles/.zshrc
         dest: /home/{{ username }}/.zshrc
 
-    - name: Find all files and directories in user's home directory, excluding .ansible
+    - name: Find all files and directories in .config
       ansible.builtin.find:
-        paths: "/home/{{ username }}"
+        paths: "/home/{{ username }}/.config"
         recurse: yes
-        excludes: ".ansible/*"
-      register: files_and_directories
+      register: config_files_and_directories
+      become: yes
 
-
-    - name: Change ownership of all files and directories in user's home directory
+    - name: Change ownership of all files and directories in .config
       ansible.builtin.file:
         path: "{{ item.path }}"
         owner: "{{ username }}"
         group: "{{ username }}"
-      with_items: "{{ files_and_directories.files }}"
+      with_items: "{{ config_files_and_directories.files }}"
       become: yes
+
+    - name: Ensure the user owns .xinitrc
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.xinitrc"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+      become: yes
+
+    - name: Ensure the user owns .Xresources
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.Xresources"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+      become: yes
+
+    - name: Ensure the user owns .Xauthority
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.Xauthority"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+      become: yes
+
 
     - name: Ensure tpm is cloned
       ansible.builtin.git:
