@@ -46,13 +46,13 @@
     # Config file move
     - name: Ensure the .config directory exists
       ansible.builtin.file:
-        path: /home/{{ username }}/.config
+        path: "/home/{{ username }}/.config"
         state: directory
 
     - name: Copy the entire config directory
       ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/.config
-        dest: /home/{{ username }}/
+        src: "/home/{{ username }}/dotfiles/.config"
+        dest: "/home/{{ username }}/"
 
     # Backgrounds
     - name: Ensure backgrounds directory exists
