@@ -171,11 +171,13 @@
         src: /home/{{ username }}/dotfiles/.zshrc
         dest: /home/{{ username }}/.zshrc
 
-    - name: Find all files and directories in user's home directory
+    - name: Find all files and directories in user's home directory, excluding .ansible
       ansible.builtin.find:
         paths: "/home/{{ username }}"
         recurse: yes
+        excludes: ".ansible/*"
       register: files_and_directories
+
 
     - name: Change ownership of all files and directories in user's home directory
       ansible.builtin.file:
