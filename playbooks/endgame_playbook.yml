@@ -127,30 +127,30 @@
         dest: /home/{{ username }}/.local/share/fonts
         remote_src: yes
 
-    # Downloading the Icomoon feather font
-    - name: Download Icomoon Feather Font
-      ansible.builtin.get_url:
-        url: 'https://aur.archlinux.org/cgit/aur.git/snapshot/ttf-icomoon-feather.tar.gz'
-        dest: /tmp/ttf-icomoon-feather.tar.gz
-        mode: '0440'
+# Download Icomoon Feather Font from Feather Icons website
+#    - name: Download Icomoon Feather Font
+#     ansible.builtin.get_url:
+#        url: 'https://feathericons.com/feather.zip'  # Update with the correct download URL from Feather Icons
+#        dest: /tmp/feather.zip
+#        mode: '0440'
 
-    - name: Ensure /tmp/ttf-icomoon-feather directory exists
-      ansible.builtin.file:
-        path: /tmp/ttf-icomoon-feather
-        state: directory
-        recurse: yes
+          #    - name: Ensure /tmp/ttf-icomoon-feather directory exists
+          # ansible.builtin.file:
+          # path: /tmp/feather
+          #state: directory
+          #recurse: yes
 
-    - name: Unzip Icomoon Feather Font
-      ansible.builtin.unarchive:
-        src: /tmp/ttf-icomoon-feather.tar.gz
-        dest: /tmp/ttf-icomoon-feather
-        remote_src: yes
+          #    - name: Unzip Icomoon Feather Font
+          #ansible.builtin.unarchive:
+          #src: /tmp/feather.zip
+          #dest: /tmp/feather
+          #remote_src: yes
 
-    - name: Move Icomoon Feather Fonts to Fonts Directory
-      ansible.builtin.copy:
-        src: /tmp/ttf-icomoon-feather/
-        dest: /home/{{ username }}/.local/share/fonts
-        remote_src: yes
+          #- name: Move Icomoon Feather Fonts to Fonts Directory
+          #ansible.builtin.copy:
+          #src: /tmp/feather/
+          #dest: /home/{{ username }}/.local/share/fonts
+          #remote_src: yes
 
     - name: Copy .tmux directory and its contents
       ansible.builtin.copy:
@@ -178,18 +178,14 @@
         src: /home/{{ username }}/dotfiles/.zshrc
         dest: /home/{{ username }}/.zshrc
 
-    - name: Set executable permissions for dotfiles
-      ansible.builtin.find:
-        paths: /home/{{ username }}/dotfiles
-        recurse: yes
-        patterns: '*.sh'  # Adjust this pattern to match the file extensions of your executable dotfiles
-      register: executable_files
-
-    - name: Make dotfiles executable
+    - name: Change ownership of user's home directory
       ansible.builtin.file:
-        path: "{{ item.path }}"
-        mode: '0755'  # Set the desired executable permissions (e.g., 0755 for read and execute permissions)
-      with_items: "{{ executable_files.files }}"
+        path: /home/{{ username }}
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+      become: yes
+
 
     - name: Ensure tpm is cloned
       ansible.builtin.git:
