@@ -140,6 +140,11 @@
         dest: /home/{{ username }}/.local/share/fonts
         remote_src: yes
 
+    # Donwload the icomoon feather font
+    - name: Move the icomoon feather font
+      ansible.builtin.get_url:
+        url: 'https://github.com/khanhas/dotfiles/blob/master/polybar/fonts/icomoon-feather.ttf'
+        dest: /home/{{ username }}/.local/share/fonts/icomoon-feather.ttf
 # Download Icomoon Feather Font from Feather Icons website
 #    - name: Download Icomoon Feather Font
 #     ansible.builtin.get_url:
