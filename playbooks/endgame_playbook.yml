@@ -44,6 +44,12 @@
         line: '{{ username }} ALL=(ALL:ALL) ALL'
         validate: 'visudo -cf %s'
 
+    - name: Mark the directory as safe in Git configuration
+      ansible.builtin.shell:
+        cmd: "git config --global --add safe.directory /home/test/dotfiles"
+      become: yes
+
+
     # Clone dotfiles repository
     - name: Clone dotfiles repository
       ansible.builtin.git:
