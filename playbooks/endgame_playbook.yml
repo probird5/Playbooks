@@ -251,20 +251,4 @@
       with_items: "{{ sh_files.files }}"
       become: yes
 
-    - name: Ensure tpm is cloned
-      ansible.builtin.git:
-        repo: https://github.com/tmux-plugins/tpm
-        dest: /home/{{ username }}/.tmux/plugins/tpm
-        version: master
-
-    - name: Install tmux plugins using tpm
-      ansible.builtin.shell: |
-        tmux start-server
-        tmux new-session -d
-        sleep 1
-        tmux source /home/{{ username }}/.tmux.conf
-        sleep 1
-        tmux kill-server
-      args:
-        executable: /bin/bash
 
