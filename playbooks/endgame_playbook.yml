@@ -30,6 +30,20 @@
           - xclip
         state: present
 
+    - name: Ensure user is present
+      ansible.builtin.user:
+        name: "{{ username }}"
+        state: present
+        # Add other user parameters as needed (e.g., groups, shell, etc.)
+
+    - name: Ensure user is in sudoers file
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ username }}'
+        line: '{{ username }} ALL=(ALL:ALL) ALL'
+        validate: 'visudo -cf %s'
+
     # Clone dotfiles repository
     - name: Clone dotfiles repository
       ansible.builtin.git:
@@ -170,6 +184,15 @@
       ansible.builtin.copy:
         src: /home/{{ username }}/dotfiles/.zshrc
         dest: /home/{{ username }}/.zshrc
+
+    - name: Recursively change ownership of the user's home directory
+      ansible.builtin.file:
+        path: "/home/{{ username }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        recurse: yes
+      become: yes
+
 
     - name: Find all files and directories in .config
       ansible.builtin.find:
