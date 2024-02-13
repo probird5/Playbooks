@@ -34,7 +34,7 @@
     - name: Clone dotfiles repository
       ansible.builtin.git:
         repo: 'https://github.com/probird5/dotfiles'
-        dest: /home/{{ username }}/dotfiles
+        dest: "/home/{{ username }}/dotfiles"
 
     - name: Change ownership of user's home directory
       ansible.builtin.file:
