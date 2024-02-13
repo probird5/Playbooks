@@ -40,8 +40,8 @@
       ansible.builtin.file:
         path: /home/{{ username }}
         state: directory
-        owner: {{ username }}
-        group: {{ username }}
+        owner: "{{ username }}"
+        group: "{{ username }}"
     
     # Config file move
     - name: Ensure the .config directory exists
