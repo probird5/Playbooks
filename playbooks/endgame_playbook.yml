@@ -36,13 +36,6 @@
         repo: 'https://github.com/probird5/dotfiles'
         dest: "/home/{{ username }}/dotfiles"
 
-    - name: Change ownership of user's home directory
-      ansible.builtin.file:
-        path: /home/{{ username }}
-        state: directory
-        owner: "{{ username }}"
-        group: "{{ username }}"
-    
     # Config file move
     - name: Ensure the .config directory exists
       ansible.builtin.file:
@@ -178,14 +171,15 @@
         src: /home/{{ username }}/dotfiles/.zshrc
         dest: /home/{{ username }}/.zshrc
 
-    - name: Change ownership of user's home directory
+    - name: Change ownership of all files and subdirectories in user's home directory
       ansible.builtin.file:
-        path: /home/{{ username }}
-        state: directory
+        path: "/home/{{ username }}/{{ item }}"
         owner: "{{ username }}"
         group: "{{ username }}"
+        recurse: yes
+      with_fileglob:
+        - "/home/{{ username }}/*"
       become: yes
-
 
     - name: Ensure tpm is cloned
       ansible.builtin.git:
