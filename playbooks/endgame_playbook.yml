@@ -230,6 +230,20 @@
         group: "{{ username }}"
       become: yes
 
+    - name: Find all .sh files in .config directory
+      ansible.builtin.find:
+        paths: "/home/{{ username }}/.config"
+        patterns: "*.sh"
+        recurse: yes
+      register: sh_files
+      become: yes
+
+    - name: Change file permissions to make .sh files executable
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: 'a+x'
+      with_items: "{{ sh_files.files }}"
+      become: yes
 
     - name: Ensure tpm is cloned
       ansible.builtin.git:
