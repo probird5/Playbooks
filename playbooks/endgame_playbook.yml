@@ -81,7 +81,7 @@
 
     - name: Copy backgrounds
       ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/background/
+        src: /home/{{ username }}/dotfiles/backgrounds/
         dest: /home/{{ username }}/Pictures/backgrounds/
         directory_mode: yes
 
