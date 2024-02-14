@@ -81,10 +81,10 @@
         dest: /home/{{ username }}/Pictures/backgrounds/
         directory_mode: yes
 
-    # Ensure the font directory exists
     - name: Ensure font directory exists
       ansible.builtin.file:
-        path: /home/{{ username }}/.local/share/fonts
+        path: "/home/{{ username }}/.local/share/fonts"
+        state: directory
 
     - name: Copy the font I need to the fonts folder
       ansible.builtin.copy:
