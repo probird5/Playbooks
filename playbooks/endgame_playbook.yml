@@ -241,12 +241,12 @@
         group: "{{ username }}"
       become: yes
 
-    - name: Ensure the user owns .Xauthority
-      ansible.builtin.file:
-        path: "/home/{{ username }}/.Xauthority"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-      become: yes
+        #    - name: Ensure the user owns .Xauthority
+        #ansible.builtin.file:
+        #path: "/home/{{ username }}/.Xauthority"
+        #owner: "{{ username }}"
+        #group: "{{ username }}"
+        # become: yes
 
     - name: Find all .sh files in .config directory
       ansible.builtin.find:
