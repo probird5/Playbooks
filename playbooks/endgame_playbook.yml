@@ -264,3 +264,58 @@
       become: yes
 
 
+    - name: Fetch the latest version of Golang
+      ansible.builtin.command: "curl -L https://golang.org/VERSION?m=text"
+      register: go_version_result
+      changed_when: false
+
+    - name: Set Golang version fact
+      set_fact:
+        go_version: "{{ go_version_result.stdout.split('\n')[0] | regex_replace('go', '') }}"
+
+    - name: Debug - Show captured Go version
+      ansible.builtin.debug:
+        msg: "Captured Go version: {{ go_version }}"
+
+    - name: Download Golang
+      ansible.builtin.get_url:
+        url: "https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        mode: '0664'
+      when: go_version is defined and go_version != ''
+
+    - name: Remove existing Golang installation
+      ansible.builtin.file:
+        path: "/usr/local/go"
+        state: absent
+      when: go_version is defined and go_version != ''
+
+    - name: Extract Golang tarball
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: "/usr/local"
+        remote_src: yes
+        creates: "/usr/local/go/bin/go"
+      when: go_version is defined and go_version != ''
+
+    - name: Remove downloaded Golang tarball
+      ansible.builtin.file:
+        path: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        state: absent
+      when: go_version is defined and go_version != ''
+
+    - name: Set GOROOT in .zshrc
+      ansible.builtin.lineinfile:
+        path: "/home/{{ username }}/.zshrc"
+        line: 'export GOROOT=/usr/local/go'
+        create: yes
+      become: yes
+      become_user: "{{ username }}"
+
+    - name: Add Golang path to .zshrc
+      ansible.builtin.lineinfile:
+        path: "/home/{{ username }}/.zshrc"
+        line: 'export PATH=$PATH:/usr/local/go/bin'
+        create: yes
+      become: yes
+      become_user: "{{ username }}"

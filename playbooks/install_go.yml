@@ -46,16 +46,16 @@
 
     - name: Set GOROOT in .zshrc
       ansible.builtin.lineinfile:
-        path: "/home/{{ target_user }}/.zshrc"
+        path: "/home/{{ username }}/.zshrc"
         line: 'export GOROOT=/usr/local/go'
         create: yes
       become: yes
-      become_user: "{{ target_user }}"
+      become_user: "{{ username }}"
 
     - name: Add Golang path to .zshrc
       ansible.builtin.lineinfile:
-        path: "/home/{{ target_user }}/.zshrc"
+        path: "/home/{{ username }}/.zshrc"
         line: 'export PATH=$PATH:/usr/local/go/bin'
         create: yes
       become: yes
-      become_user: "{{ target_user }}"
+      become_user: "{{ username }}"
