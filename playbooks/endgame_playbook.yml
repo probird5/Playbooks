@@ -67,11 +67,11 @@
       ansible.builtin.copy:
         src: "/home/{{ username }}/dotfiles/.config"
         dest: "/home/{{ username }}/"
-
     - name: Copy the font I need to the fonts folder
-      ansible.builtin.file:
+      ansible.builtin.copy:
         src: "/home/{{ username }}/dotfiles/fonts/feather.ttf"
-        dest: "/home/{{ username }}/.local/share/fonts"
+        dest: "/home/{{ username }}/.local/share/fonts/feather.ttf"
+
 
     # Backgrounds
     - name: Ensure backgrounds directory exists
