@@ -67,10 +67,6 @@
       ansible.builtin.copy:
         src: "/home/{{ username }}/dotfiles/.config"
         dest: "/home/{{ username }}/"
-    - name: Copy the font I need to the fonts folder
-      ansible.builtin.copy:
-        src: "/home/{{ username }}/dotfiles/fonts/feather.ttf"
-        dest: "/home/{{ username }}/.local/share/fonts/feather.ttf"
 
 
     # Backgrounds
@@ -89,6 +85,11 @@
     - name: Ensure font directory exists
       ansible.builtin.file:
         path: /home/{{ username }}/.local/share/fonts
+
+    - name: Copy the font I need to the fonts folder
+      ansible.builtin.copy:
+        src: "/home/{{ username }}/dotfiles/fonts/feather.ttf"
+        dest: "/home/{{ username }}/.local/share/fonts/feather.ttf"
         state: directory
 
     # Download Iosevka Font Zip
