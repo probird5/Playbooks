@@ -90,7 +90,7 @@
       ansible.builtin.copy:
         src: "/home/{{ username }}/dotfiles/fonts/feather.ttf"
         dest: "/home/{{ username }}/.local/share/fonts/feather.ttf"
-        state: directory
+
 
     # Download Iosevka Font Zip
     - name: Download Iosevka Font Zip
