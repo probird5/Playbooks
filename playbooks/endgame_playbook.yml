@@ -28,6 +28,7 @@
           - unzip
           - xorg
           - xclip
+          - feh
         state: present
 
     - name: Ensure user is present
@@ -66,6 +67,11 @@
       ansible.builtin.copy:
         src: "/home/{{ username }}/dotfiles/.config"
         dest: "/home/{{ username }}/"
+
+    - name: Copy the font I need to the fonts folder
+      ansible.builtin.file:
+        src: "/home/{{ username }}/dotfiles/fonts/feather.ttf"
+        dest: "/home/{{ username }}/.local/share/fonts"
 
     # Backgrounds
     - name: Ensure backgrounds directory exists
