@@ -10,11 +10,15 @@ fi
 USERNAME=$1
 
 # Update package list and upgrade existing packages
-sudo apt update
-sudo apt upgrade -y
+apt update
+apt upgrade -y
 
 # Install Git and other essential packages
-sudo apt install -y git sudo python3 ansible
+apt install -y git sudo python3 ansible
+
+git clone https://github.com/probird5/ansible.git
+
+cd ansible
 
 # Check Ansible version
 ansible --version
