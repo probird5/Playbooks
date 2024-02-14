@@ -153,30 +153,6 @@
       ansible.builtin.get_url:
         url: 'https://github.com/khanhas/dotfiles/blob/master/polybar/fonts/icomoon-feather.ttf'
         dest: /home/{{ username }}/.local/share/fonts/icomoon-feather.ttf
-# Download Icomoon Feather Font from Feather Icons website
-#    - name: Download Icomoon Feather Font
-#     ansible.builtin.get_url:
-#        url: 'https://feathericons.com/feather.zip'  # Update with the correct download URL from Feather Icons
-#        dest: /tmp/feather.zip
-#        mode: '0440'
-
-          #    - name: Ensure /tmp/ttf-icomoon-feather directory exists
-          # ansible.builtin.file:
-          # path: /tmp/feather
-          #state: directory
-          #recurse: yes
-
-          #    - name: Unzip Icomoon Feather Font
-          #ansible.builtin.unarchive:
-          #src: /tmp/feather.zip
-          #dest: /tmp/feather
-          #remote_src: yes
-
-          #- name: Move Icomoon Feather Fonts to Fonts Directory
-          #ansible.builtin.copy:
-          #src: /tmp/feather/
-          #dest: /home/{{ username }}/.local/share/fonts
-          #remote_src: yes
 
     - name: Copy .tmux directory and its contents
       ansible.builtin.copy:
