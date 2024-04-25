@@ -208,7 +208,7 @@
     paths: "/home/{{ username }}/.config"
     patterns: "*.sh"
     recurse: yes
-    register: sh_files
+  register: sh_files
   become: yes
 
 - name: Change file permissions to make .sh files executable
