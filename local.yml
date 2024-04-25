@@ -1,6 +1,7 @@
 - hosts: localhost
   vars:
     personal: "{{ lookup('env', 'HOME') }}/personal"
+    username: "probird5"
   pre_tasks:
   - name: Update Apt
     become: true
