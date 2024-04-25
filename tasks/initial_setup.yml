@@ -1,8 +1,67 @@
 - name: Bootstrap development environment
+  hosts: localhost
+  become: yes
+  become_user: root
+  vars:
+    target_user: "{{ username }}"
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+    - name: Install packages with apt
+      ansible.builtin.apt:
+        name:
+          - git
+          - tmux
+          - zsh
+          - alacritty
+          - i3
+          - kitty
+          - neofetch
+          - picom
+          - polybar
+          - rofi
+          - tree
+          - unzip
+          - xorg
+          - xclip
+          - feh
+        state: present
+    - name: Ensure user is present
+      ansible.builtin.user:
+        name: "{{ username }}"
+        state: present
+        # Add other user parameters as needed (e.g., groups, shell, etc.)
 
+    - name: Ensure user is in sudoers file
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ username }}'
+        line: '{{ username }} ALL=(ALL:ALL) ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Mark the directory as safe in Git configuration
+      ansible.builtin.shell:
+        cmd: "git config --global --add safe.directory /home/probird5/dotfiles"
+      become: yes
+
+    # Clone dotfiles repository
+    - name: Clone dotfiles repository
+      ansible.builtin.git:
+        repo: 'https://github.com/probird5/dotfiles'
+        dest: "/home/{{ username }}/dotfiles"
+
+    # Config file move
+    - name: Ensure the .config directory exists
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.config"
+        state: directory
+
+    - name: Copy the entire config directory
+      ansible.builtin.copy:
         src: "/home/{{ username }}/dotfiles/.config"
         dest: "/home/{{ username }}/"
-
 
     # Backgrounds
     - name: Ensure backgrounds directory exists
