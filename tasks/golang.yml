@@ -16,13 +16,13 @@
     url: "https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz"
     dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
     mode: '0664'
-    when: go_version is defined and go_version != ''
+  when: go_version is defined and go_version != ''
 
 - name: Remove existing Golang installation
   ansible.builtin.file:
     path: "/usr/local/go"
     state: absent
-    when: go_version is defined and go_version != ''
+  when: go_version is defined and go_version != ''
 
 - name: Extract Golang tarball
   ansible.builtin.unarchive:
