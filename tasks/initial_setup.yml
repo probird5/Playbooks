@@ -1,226 +1,220 @@
-- name: Bootstrap development environment
-  vars:
-    target_user: "{{ username }}"
-    - name: Update apt cache
-      ansible.builtin.apt:
-        update_cache: yes
-    - name: Install packages with apt
-      ansible.builtin.apt:
-        name:
-          - git
-          - tmux
-          - zsh
-          - alacritty
-          - i3
-          - kitty
-          - neofetch
-          - picom
-          - polybar
-          - rofi
-          - tree
-          - unzip
-          - xorg
-          - xclip
-          - feh
-        state: present
+- name: Install packages with apt
+  ansible.builtin.apt:
+    name:
+      - git
+      - tmux
+      - zsh
+      - alacritty
+      - i3
+      - kitty
+      - neofetch
+      - picom
+      - polybar
+      - rofi
+      - tree
+      - unzip
+      - xorg
+      - xclip
+      - feh
+    state: present
 
-    - name: Ensure user is present
-      ansible.builtin.user:
-        name: "{{ username }}"
-        state: present
-        # Add other user parameters as needed (e.g., groups, shell, etc.)
+- name: Ensure user is present
+  ansible.builtin.user:
+    name: "{{ username }}"
+    state: present
+      # Add other user parameters as needed (e.g., groups, shell, etc.)
 
-    - name: Ensure user is in sudoers file
-      ansible.builtin.lineinfile:
-        path: /etc/sudoers
-        state: present
-        regexp: '^{{ username }}'
-        line: '{{ username }} ALL=(ALL:ALL) ALL'
-        validate: 'visudo -cf %s'
+- name: Ensure user is in sudoers file
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^{{ username }}'
+    line: '{{ username }} ALL=(ALL:ALL) ALL'
+    validate: 'visudo -cf %s'
 
-    - name: Mark the directory as safe in Git configuration
-      ansible.builtin.shell:
-        cmd: "git config --global --add safe.directory /home/probird5/dotfiles"
-      become: yes
+- name: Mark the directory as safe in Git configuration
+  ansible.builtin.shell:
+    cmd: "git config --global --add safe.directory /home/probird5/dotfiles"
+    become: yes
 
-    # Clone dotfiles repository
-    - name: Clone dotfiles repository
-      ansible.builtin.git:
-        repo: 'https://github.com/probird5/dotfiles'
-        dest: "/home/{{ username }}/dotfiles"
+      # Clone dotfiles repository
+- name: Clone dotfiles repository
+  ansible.builtin.git:
+    repo: 'https://github.com/probird5/dotfiles'
+    dest: "/home/{{ username }}/dotfiles"
 
-    # Config file move
-    - name: Ensure the .config directory exists
-      ansible.builtin.file:
-        path: "/home/{{ username }}/.config"
-        state: directory
+      # Config file move
+- name: Ensure the .config directory exists
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.config"
+    state: directory
 
-    - name: Copy the entire config directory
-      ansible.builtin.copy:
-        src: "/home/{{ username }}/dotfiles/.config"
-        dest: "/home/{{ username }}/"
+- name: Copy the entire config directory
+  ansible.builtin.copy:
+    src: "/home/{{ username }}/dotfiles/.config"
+    dest: "/home/{{ username }}/"
 
-    # Backgrounds
-    - name: Ensure backgrounds directory exists
-      ansible.builtin.file:
-        path: /home/{{ username }}/Pictures/backgrounds
-        state: directory
+      # Backgrounds
+- name: Ensure backgrounds directory exists
+  ansible.builtin.file:
+    path: /home/{{ username }}/Pictures/backgrounds
+    state: directory
 
-    - name: Copy backgrounds
-      ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/backgrounds/
-        dest: /home/{{ username }}/Pictures/backgrounds/
-        directory_mode: yes
+- name: Copy backgrounds
+  ansible.builtin.copy:
+    src: /home/{{ username }}/dotfiles/backgrounds/
+    dest: /home/{{ username }}/Pictures/backgrounds/
+    directory_mode: yes
 
-    - name: Ensure font directory exists
-      ansible.builtin.file:
-        path: "/home/{{ username }}/.local/share/fonts"
-        state: directory
+- name: Ensure font directory exists
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.local/share/fonts"
+    state: directory
 
-    - name: Copy the font I need to the fonts folder
-      ansible.builtin.copy:
-        src: "/home/{{ username }}/dotfiles/fonts/feather.ttf"
-        dest: "/home/{{ username }}/.local/share/fonts/feather.ttf"
+- name: Copy the font I need to the fonts folder
+  ansible.builtin.copy:
+    src: "/home/{{ username }}/dotfiles/fonts/feather.ttf"
+    dest: "/home/{{ username }}/.local/share/fonts/feather.ttf"
 
 
-    # Download Iosevka Font Zip
-    - name: Download Iosevka Font Zip
-      ansible.builtin.get_url:
-        url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Iosevka.zip'
-        dest: /tmp/Iosevka.zip
-        mode: '0440'
+      # Download Iosevka Font Zip
+- name: Download Iosevka Font Zip
+  ansible.builtin.get_url:
+    url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Iosevka.zip'
+    dest: /tmp/Iosevka.zip
+    mode: '0440'
 
-    - name: Ensure /tmp/Iosevka directory exists
-      ansible.builtin.file:
-        path: /tmp/Iosevka
-        state: directory
-        recurse: yes
+- name: Ensure /tmp/Iosevka directory exists
+  ansible.builtin.file:
+    path: /tmp/Iosevka
+    state: directory
+    recurse: yes
 
-    # Unzip Iosevka Font
-    - name: Unzip Iosevka Font
-      ansible.builtin.unarchive:
-        src: /tmp/Iosevka.zip
-        dest: /tmp/Iosevka/
-        remote_src: yes
+      # Unzip Iosevka Font
+- name: Unzip Iosevka Font
+  ansible.builtin.unarchive:
+    src: /tmp/Iosevka.zip
+    dest: /tmp/Iosevka/
+    remote_src: yes
 
-    # Move Iosevka Fonts to Fonts Directory
-    - name: Move Iosevka Fonts to Fonts Directory
-      ansible.builtin.copy:
-        src: /tmp/Iosevka/
-        dest: /home/{{ username }}/.local/share/fonts
-        remote_src: yes
+      # Move Iosevka Fonts to Fonts Directory
+- name: Move Iosevka Fonts to Fonts Directory
+  ansible.builtin.copy:
+    src: /tmp/Iosevka/
+    dest: /home/{{ username }}/.local/share/fonts
+    remote_src: yes
 
-    # Download JetBrainsMono Font Zip
-    - name: Download JetBrainsMono Font Zip
-      ansible.builtin.get_url:
-        url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip'
-        dest: /tmp/JetBrainsMono.zip
-        mode: '0440'
+      # Download JetBrainsMono Font Zip
+- name: Download JetBrainsMono Font Zip
+  ansible.builtin.get_url:
+    url: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip'
+    dest: /tmp/JetBrainsMono.zip
+    mode: '0440'
 
-    - name: Ensure /tmp/JetBrainsMono/ directory exists
-      ansible.builtin.file:
-        path: /tmp/JetBrainsMono
-        state: directory
-        recurse: yes
-
-
-    # Unzip JetBrainsMono Font
-    - name: Unzip JetBrainsMono Font
-      ansible.builtin.unarchive:
-        src: /tmp/JetBrainsMono.zip
-        dest: /tmp/JetBrainsMono/
-        remote_src: yes
-
-    # Move JetBrainsMono Fonts to Fonts Directory
-    - name: Move JetBrainsMono Fonts to Fonts Directory
-      ansible.builtin.copy:
-        src: /tmp/JetBrainsMono/
-        dest: /home/{{ username }}/.local/share/fonts
-        remote_src: yes
-
-    # Donwload the icomoon feather font
-    - name: Move the icomoon feather font
-      ansible.builtin.get_url:
-        url: 'https://github.com/khanhas/dotfiles/blob/master/polybar/fonts/icomoon-feather.ttf'
-        dest: /home/{{ username }}/.local/share/fonts/icomoon-feather.ttf
-
-    - name: Copy .tmux directory and its contents
-      ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/.tmux/
-        dest: /home/{{ username }}/.tmux/
-        directory_mode: yes
-
-    - name: Copy .tmux.conf
-      ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/.tmux.conf
-        dest: /home/{{ username }}/.tmux.conf
-
-    - name: Copy .xinitrc
-      ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/.xinitrc
-        dest: /home/{{ username }}/.xinitrc
-
-    - name: Copy .Xresources
-      ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/.Xresources
-        dest: /home/{{ username }}/.Xresources
-
-    - name: Copy .zshrc
-      ansible.builtin.copy:
-        src: /home/{{ username }}/dotfiles/.zshrc
-        dest: /home/{{ username }}/.zshrc
-
-    - name: Recursively change ownership of the user's home directory
-      ansible.builtin.file:
-        path: "/home/{{ username }}"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-        recurse: yes
-      become: yes
+- name: Ensure /tmp/JetBrainsMono/ directory exists
+  ansible.builtin.file:
+    path: /tmp/JetBrainsMono
+    state: directory
+    recurse: yes
 
 
-    - name: Find all files and directories in .config
-      ansible.builtin.find:
-        paths: "/home/{{ username }}/.config"
-        recurse: yes
-      register: config_files_and_directories
-      become: yes
+      # Unzip JetBrainsMono Font
+- name: Unzip JetBrainsMono Font
+  ansible.builtin.unarchive:
+    src: /tmp/JetBrainsMono.zip
+    dest: /tmp/JetBrainsMono/
+    remote_src: yes
 
-    - name: Change ownership of all files and directories in .config
-      ansible.builtin.file:
-        path: "{{ item.path }}"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-      with_items: "{{ config_files_and_directories.files }}"
-      become: yes
+      # Move JetBrainsMono Fonts to Fonts Directory
+- name: Move JetBrainsMono Fonts to Fonts Directory
+  ansible.builtin.copy:
+    src: /tmp/JetBrainsMono/
+    dest: /home/{{ username }}/.local/share/fonts
+    remote_src: yes
 
-    - name: Ensure the user owns .xinitrc
-      ansible.builtin.file:
-        path: "/home/{{ username }}/.xinitrc"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-      become: yes
+      # Donwload the icomoon feather font
+- name: Move the icomoon feather font
+  ansible.builtin.get_url:
+    url: 'https://github.com/khanhas/dotfiles/blob/master/polybar/fonts/icomoon-feather.ttf'
+    dest: /home/{{ username }}/.local/share/fonts/icomoon-feather.ttf
 
-    - name: Ensure the user owns .Xresources
-      ansible.builtin.file:
-        path: "/home/{{ username }}/.Xresources"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-      become: yes
+- name: Copy .tmux directory and its contents
+  ansible.builtin.copy:
+    src: /home/{{ username }}/dotfiles/.tmux/
+    dest: /home/{{ username }}/.tmux/
+    directory_mode: yes
+
+- name: Copy .tmux.conf
+  ansible.builtin.copy:
+    src: /home/{{ username }}/dotfiles/.tmux.conf
+    dest: /home/{{ username }}/.tmux.conf
+
+- name: Copy .xinitrc
+  ansible.builtin.copy:
+    src: /home/{{ username }}/dotfiles/.xinitrc
+    dest: /home/{{ username }}/.xinitrc
+
+- name: Copy .Xresources
+  ansible.builtin.copy:
+    src: /home/{{ username }}/dotfiles/.Xresources
+    dest: /home/{{ username }}/.Xresources
+
+- name: Copy .zshrc
+  ansible.builtin.copy:
+    src: /home/{{ username }}/dotfiles/.zshrc
+    dest: /home/{{ username }}/.zshrc
+
+- name: Recursively change ownership of the user's home directory
+  ansible.builtin.file:
+    path: "/home/{{ username }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    recurse: yes
+    become: yes
 
 
-    - name: Find all .sh files in .config directory
-      ansible.builtin.find:
-        paths: "/home/{{ username }}/.config"
-        patterns: "*.sh"
-        recurse: yes
-      register: sh_files
-      become: yes
+- name: Find all files and directories in .config
+  ansible.builtin.find:
+    paths: "/home/{{ username }}/.config"
+    recurse: yes
+    register: config_files_and_directories
+    become: yes
 
-    - name: Change file permissions to make .sh files executable
-      ansible.builtin.file:
-        path: "{{ item.path }}"
-        mode: 'a+x'
-      with_items: "{{ sh_files.files }}"
-      become: yes
+- name: Change ownership of all files and directories in .config
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    with_items: "{{ config_files_and_directories.files }}"
+    become: yes
+
+- name: Ensure the user owns .xinitrc
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.xinitrc"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    become: yes
+
+- name: Ensure the user owns .Xresources
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.Xresources"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    become: yes
+
+
+- name: Find all .sh files in .config directory
+  ansible.builtin.find:
+    paths: "/home/{{ username }}/.config"
+    patterns: "*.sh"
+    recurse: yes
+    register: sh_files
+    become: yes
+
+- name: Change file permissions to make .sh files executable
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: 'a+x'
+    with_items: "{{ sh_files.files }}"
+    become: yes
 
