@@ -215,6 +215,6 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: 'a+x'
-    with_items: "{{ sh_files.files }}"
+  with_items: "{{ sh_files.files }}"
   become: yes
 
