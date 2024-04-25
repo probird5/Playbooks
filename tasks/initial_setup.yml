@@ -16,6 +16,7 @@
       - xorg
       - xclip
       - feh
+      - curl
     state: present
 
 - name: Ensure user is present
