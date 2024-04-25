@@ -29,4 +29,5 @@ sleep 3
 
 echo "Running ansible"
 
-ansible-playbook playbooks/endgame_playbook.yml -e "username=$USERNAME"
+ansible-playbook local.yml -e "username=$USERNAME"
+

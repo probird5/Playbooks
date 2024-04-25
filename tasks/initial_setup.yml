@@ -1,71 +1,5 @@
 - name: Bootstrap development environment
-  hosts: localhost
-  become: yes
-  become_user: root
 
-  vars:
-    target_user: "{{ username }}"
-
-  tasks:
-    - name: Update apt cache
-      ansible.builtin.apt:
-        update_cache: yes
-
-    - name: Install packages with apt
-      ansible.builtin.apt:
-        name:
-          - git
-          - tmux
-          - zsh
-          - alacritty
-          - i3
-          - kitty
-          - neofetch
-          - picom
-          - polybar
-          - rofi
-          - tree
-          - unzip
-          - xorg
-          - xclip
-          - feh
-          - curl
-        state: present
-
-    - name: Ensure user is present
-      ansible.builtin.user:
-        name: "{{ username }}"
-        state: present
-        # Add other user parameters as needed (e.g., groups, shell, etc.)
-
-    - name: Ensure user is in sudoers file
-      ansible.builtin.lineinfile:
-        path: /etc/sudoers
-        state: present
-        regexp: '^{{ username }}'
-        line: '{{ username }} ALL=(ALL:ALL) ALL'
-        validate: 'visudo -cf %s'
-
-    - name: Mark the directory as safe in Git configuration
-      ansible.builtin.shell:
-        cmd: "git config --global --add safe.directory /home/test/dotfiles"
-      become: yes
-
-
-    # Clone dotfiles repository
-    - name: Clone dotfiles repository
-      ansible.builtin.git:
-        repo: 'https://github.com/probird5/dotfiles'
-        dest: "/home/{{ username }}/dotfiles"
-
-    # Config file move
-    - name: Ensure the .config directory exists
-      ansible.builtin.file:
-        path: "/home/{{ username }}/.config"
-        state: directory
-
-    - name: Copy the entire config directory
-      ansible.builtin.copy:
         src: "/home/{{ username }}/dotfiles/.config"
         dest: "/home/{{ username }}/"
 
@@ -218,12 +152,6 @@
         group: "{{ username }}"
       become: yes
 
-        #    - name: Ensure the user owns .Xauthority
-        #ansible.builtin.file:
-        #path: "/home/{{ username }}/.Xauthority"
-        #owner: "{{ username }}"
-        #group: "{{ username }}"
-        # become: yes
 
     - name: Find all .sh files in .config directory
       ansible.builtin.find:
@@ -240,59 +168,3 @@
       with_items: "{{ sh_files.files }}"
       become: yes
 
-
-    - name: Fetch the latest version of Golang
-      ansible.builtin.command: "curl -L https://golang.org/VERSION?m=text"
-      register: go_version_result
-      changed_when: false
-
-    - name: Set Golang version fact
-      set_fact:
-        go_version: "{{ go_version_result.stdout.split('\n')[0] | regex_replace('go', '') }}"
-
-    - name: Debug - Show captured Go version
-      ansible.builtin.debug:
-        msg: "Captured Go version: {{ go_version }}"
-
-    - name: Download Golang
-      ansible.builtin.get_url:
-        url: "https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz"
-        dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
-        mode: '0664'
-      when: go_version is defined and go_version != ''
-
-    - name: Remove existing Golang installation
-      ansible.builtin.file:
-        path: "/usr/local/go"
-        state: absent
-      when: go_version is defined and go_version != ''
-
-    - name: Extract Golang tarball
-      ansible.builtin.unarchive:
-        src: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
-        dest: "/usr/local"
-        remote_src: yes
-        creates: "/usr/local/go/bin/go"
-      when: go_version is defined and go_version != ''
-
-    - name: Remove downloaded Golang tarball
-      ansible.builtin.file:
-        path: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
-        state: absent
-      when: go_version is defined and go_version != ''
-
-    - name: Set GOROOT in .zshrc
-      ansible.builtin.lineinfile:
-        path: "/home/{{ username }}/.zshrc"
-        line: 'export GOROOT=/usr/local/go'
-        create: yes
-      become: yes
-      become_user: "{{ username }}"
-
-    - name: Add Golang path to .zshrc
-      ansible.builtin.lineinfile:
-        path: "/home/{{ username }}/.zshrc"
-        line: 'export PATH=$PATH:/usr/local/go/bin'
-        create: yes
-      become: yes
-      become_user: "{{ username }}"

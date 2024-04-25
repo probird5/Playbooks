@@ -1,0 +1,17 @@
+- hosts: localhost
+  vars:
+    personal: "{{ lookup('env', 'HOME') }}/personal"
+  pre_tasks:
+  - name: Update Apt
+    become: true
+    apt:
+      force_apt_get: true
+      update_cache: true
+      state: present
+    tags:
+      - install
+  tasks:
+    - include: tasks/initial_setup.yml
+    - include: tasks/golang.yml
+    - include: tasks/1password.yml
+    - include: tasks/docker.yml
