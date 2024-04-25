@@ -178,7 +178,7 @@
     paths: "/home/{{ username }}/.config"
     recurse: yes
     register: config_files_and_directories
-    become: yes
+  become: yes
 
 - name: Change ownership of all files and directories in .config
   ansible.builtin.file:
@@ -186,21 +186,21 @@
     owner: "{{ username }}"
     group: "{{ username }}"
     with_items: "{{ config_files_and_directories.files }}"
-    become: yes
+  become: yes
 
 - name: Ensure the user owns .xinitrc
   ansible.builtin.file:
     path: "/home/{{ username }}/.xinitrc"
     owner: "{{ username }}"
     group: "{{ username }}"
-    become: yes
+  become: yes
 
 - name: Ensure the user owns .Xresources
   ansible.builtin.file:
     path: "/home/{{ username }}/.Xresources"
     owner: "{{ username }}"
     group: "{{ username }}"
-    become: yes
+  become: yes
 
 
 - name: Find all .sh files in .config directory
@@ -209,12 +209,12 @@
     patterns: "*.sh"
     recurse: yes
     register: sh_files
-    become: yes
+  become: yes
 
 - name: Change file permissions to make .sh files executable
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: 'a+x'
     with_items: "{{ sh_files.files }}"
-    become: yes
+  become: yes
 
