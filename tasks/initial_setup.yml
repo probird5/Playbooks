@@ -185,7 +185,7 @@
     path: "{{ item.path }}"
     owner: "{{ username }}"
     group: "{{ username }}"
-    with_items: "{{ config_files_and_directories.files }}"
+  with_items: "{{ config_files_and_directories.files }}"
   become: yes
 
 - name: Ensure the user owns .xinitrc
