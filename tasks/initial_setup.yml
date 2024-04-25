@@ -177,7 +177,7 @@
   ansible.builtin.find:
     paths: "/home/{{ username }}/.config"
     recurse: yes
-    register: config_files_and_directories
+  register: config_files_and_directories
   become: yes
 
 - name: Change ownership of all files and directories in .config
