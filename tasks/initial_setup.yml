@@ -170,7 +170,7 @@
     owner: "{{ username }}"
     group: "{{ username }}"
     recurse: yes
-    become: yes
+  become: yes
 
 
 - name: Find all files and directories in .config
