@@ -11,8 +11,9 @@
       state: present
     tags:
       - install
-  tasks:
-    - include: tasks/initial_setup.yml
-    - include: tasks/golang.yml
-    - include: tasks/1password.yml
-    - include: tasks/docker.yml
+
+# Included task files
+- import_tasks: tasks/initial_setup.yml
+- import_tasks: tasks/golang.yml
+- import_tasks: tasks/1password.yml
+  #- import_tasks: tasks/docker.yml
