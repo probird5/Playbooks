@@ -30,26 +30,26 @@
     dest: "/usr/local"
     remote_src: yes
     creates: "/usr/local/go/bin/go"
-    when: go_version is defined and go_version != ''
+  when: go_version is defined and go_version != ''
 
 - name: Remove downloaded Golang tarball
   ansible.builtin.file:
     path: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
     state: absent
-    when: go_version is defined and go_version != ''
+  when: go_version is defined and go_version != ''
 
 - name: Set GOROOT in .zshrc
   ansible.builtin.lineinfile:
     path: "/home/{{ username }}/.zshrc"
     line: 'export GOROOT=/usr/local/go'
     create: yes
-    become: yes
-    become_user: "{{ username }}"
+  become: yes
+  become_user: "{{ username }}"
 
 - name: Add Golang path to .zshrc
   ansible.builtin.lineinfile:
     path: "/home/{{ username }}/.zshrc"
     line: 'export PATH=$PATH:/usr/local/go/bin'
     create: yes
-    become: yes
-    become_user: "{{ username }}"
+  become: yes
+  become_user: "{{ username }}"
