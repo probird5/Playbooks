@@ -1,59 +1,54 @@
-- name: Setup Neovim
-  vars:
-    dotfiles_repo: "https://github.com/probird5/dotfiles"
-    dotfiles_dir: "{{ lookup('env', 'HOME') }}/dotfiles"
+---
+- name: Install Neovim and Git
+  apt:
+    name:
+      - neovim
+      - git
+    state: present
+    update_cache: yes
 
-  tasks:
-    - name: Install required packages
-      apt:
-        name:
-          - neovim
-          - git
-        state: present
-        update_cache: yes
+- name: Clone dotfiles repository
+  git:
+    repo: "https://github.com/probird5/dotfiles"
+    dest: "{{ lookup('env', 'HOME') }}/dotfiles"
+    update: yes
 
-    - name: Clone dotfiles repository
-      git:
-        repo: "{{ dotfiles_repo }}"
-        dest: "{{ dotfiles_dir }}"
-        update: yes
+- name: Create Neovim config directory
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config/nvim"
+    state: directory
+    mode: '0755'
 
-    - name: Create Neovim config directory
-      file:
-        path: "{{ lookup('env', 'HOME') }}/.config/nvim"
-        state: directory
-        mode: '0755'
+- name: Copy Neovim configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: '0644'
+  loop:
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/init.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/init.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lazy-lock.json", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lazy-lock.json" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/plugins.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/plugins.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/alpha.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/alpha.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/autopairs.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/autopairs.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/catppuccin.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/catppuccin.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/completions.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/completions.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/debugging.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/debugging.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/lsp-config.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/lsp-config.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/lualine.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/lualine.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/mason.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/mason.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/neo-tree.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/neo-tree.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/neotree.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/neotree.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/none-ls.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/none-ls.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/telescope.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/telescope.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/tokyonight.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/tokyonight.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/treesitter.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/treesitter.lua" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/.luarc.json", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/.luarc.json" }
+    - { src: "{{ lookup('env', 'HOME') }}/dotfiles/.config/nvim/lua/vim-options.lua", dest: "{{ lookup('env', 'HOME') }}/.config/nvim/lua/vim-options.lua" }
 
-    - name: Copy Neovim configuration files
-      copy:
-        src: "{{ dotfiles_dir }}/.config/nvim/{{ item }}"
-        dest: "{{ lookup('env', 'HOME') }}/.config/nvim/{{ item }}"
-        mode: '0644'
-      loop:
-        - 'init.lua'
-        - 'lazy-lock.json'
-        - 'lua/plugins.lua'
-        - 'lua/alpha.lua'
-        - 'lua/autopairs.lua'
-        - 'lua/catppuccin.lua'
-        - 'lua/completions.lua'
-        - 'lua/debugging.lua'
-        - 'lua/lsp-config.lua'
-        - 'lua/lualine.lua'
-        - 'lua/mason.lua'
-        - 'lua/neo-tree.lua'
-        - 'lua/neotree.lua'
-        - 'lua/none-ls.lua'
-        - 'lua/telescope.lua'
-        - 'lua/tokyonight.lua'
-        - 'lua/treesitter.lua'
-        - 'lua/.luarc.json'
-        - 'lua/vim-options.lua'
-
-    - name: Ensure proper permissions for Neovim config directory
-      file:
-        path: "{{ lookup('env', 'HOME') }}/.config/nvim"
-        state: directory
-        mode: '0755'
-        recurse: yes
+- name: Ensure proper permissions for Neovim config directory
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.config/nvim"
+    state: directory
+    mode: '0755'
+    recurse: yes
 
