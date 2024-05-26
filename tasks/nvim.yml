@@ -1,0 +1,63 @@
+---
+- name: Setup Neovim
+  hosts: localhost
+  become: true
+
+  vars:
+    dotfiles_repo: "https://github.com/probird5/dotfiles"
+    dotfiles_dir: "{{ lookup('env', 'HOME') }}/dotfiles"
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - neovim
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Clone dotfiles repository
+      git:
+        repo: "{{ dotfiles_repo }}"
+        dest: "{{ dotfiles_dir }}"
+        update: yes
+
+    - name: Create Neovim config directory
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.config/nvim"
+        state: directory
+        mode: '0755'
+
+    - name: Copy Neovim configuration files
+      copy:
+        src: "{{ dotfiles_dir }}/.config/nvim/{{ item }}"
+        dest: "{{ lookup('env', 'HOME') }}/.config/nvim/{{ item }}"
+        mode: '0644'
+      loop:
+        - 'init.lua'
+        - 'lazy-lock.json'
+        - 'lua/plugins.lua'
+        - 'lua/alpha.lua'
+        - 'lua/autopairs.lua'
+        - 'lua/catppuccin.lua'
+        - 'lua/completions.lua'
+        - 'lua/debugging.lua'
+        - 'lua/lsp-config.lua'
+        - 'lua/lualine.lua'
+        - 'lua/mason.lua'
+        - 'lua/neo-tree.lua'
+        - 'lua/neotree.lua'
+        - 'lua/none-ls.lua'
+        - 'lua/telescope.lua'
+        - 'lua/tokyonight.lua'
+        - 'lua/treesitter.lua'
+        - 'lua/.luarc.json'
+        - 'lua/vim-options.lua'
+
+    - name: Ensure proper permissions for Neovim config directory
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.config/nvim"
+        state: directory
+        mode: '0755'
+        recurse: yes
+
