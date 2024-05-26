@@ -2,7 +2,7 @@
 - name: Setup Neovim Variables
   set_fact:
     dotfiles_repo: "https://github.com/probird5/dotfiles"
-    dotfiles_dir: "{{ lookup('env', 'HOME') }}/dotfiles"
+    dotfiles_dir: "/home/{{ username }}/dotfiles"
     nvim_appimage_url: "https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
     nvim_appimage_path: "/usr/local/bin/nvim"
 
@@ -37,14 +37,14 @@
 
 - name: Create Neovim config directory
   file:
-    path: "{{ lookup('env', 'HOME') }}/.config/nvim"
+    path: "/home/{{ username }}/.config/nvim"
     state: directory
     mode: '0755'
 
 - name: Copy Neovim configuration files
   copy:
     src: "{{ dotfiles_dir }}/.config/nvim/{{ item }}"
-    dest: "{{ lookup('env', 'HOME') }}/.config/nvim/{{ item }}"
+    dest: "/home/{{ username }}/.config/nvim/{{ item }}"
     mode: '0644'
   loop:
     - 'init.lua'
@@ -69,7 +69,7 @@
 
 - name: Ensure proper permissions for Neovim config directory
   file:
-    path: "{{ lookup('env', 'HOME') }}/.config/nvim"
+    path: "/home/{{ username }}/.config/nvim"
     state: directory
     mode: '0755'
     recurse: yes
