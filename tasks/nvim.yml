@@ -14,6 +14,24 @@
     state: present
     update_cache: yes
 
+- name: Check if dotfiles directory exists
+  stat:
+    path: "{{ dotfiles_dir }}"
+  register: dotfiles_dir_status
+
+- name: Clone dotfiles repository
+  git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_dir }}"
+    update: yes
+  when: not dotfiles_dir_status.stat.exists
+
+- name: Pull latest changes in dotfiles repository
+  command: git pull
+  args:
+    chdir: "{{ dotfiles_dir }}"
+  when: dotfiles_dir_status.stat.exists
+
 - name: Download Neovim AppImage
   get_url:
     url: "{{ nvim_appimage_url }}"
@@ -28,12 +46,6 @@
     src: "{{ nvim_appimage_path }}"
     dest: /usr/bin/nvim
     state: link
-
-- name: Clone dotfiles repository
-  git:
-    repo: "{{ dotfiles_repo }}"
-    dest: "{{ dotfiles_dir }}"
-    update: yes
 
 - name: Create Neovim config directory
   file:
