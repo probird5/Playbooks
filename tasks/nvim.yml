@@ -1,8 +1,4 @@
----
 - name: Setup Neovim
-  hosts: localhost
-  become: true
-
   vars:
     dotfiles_repo: "https://github.com/probird5/dotfiles"
     dotfiles_dir: "{{ lookup('env', 'HOME') }}/dotfiles"
