@@ -7,7 +7,7 @@
     nvim_appimage_path: "/usr/local/bin/nvim"
 
 - name: Install required packages
-  apt:
+  dnf:
     name:
       - git
       - fuse
@@ -40,12 +40,14 @@
 
 - name: Move Neovim AppImage to /usr/local/bin
   command: mv /tmp/nvim.appimage {{ nvim_appimage_path }}
+  become: true
 
 - name: Create symbolic link for nvim
   file:
     src: "{{ nvim_appimage_path }}"
     dest: /usr/bin/nvim
     state: link
+  become: true
 
 - name: Create Neovim config directory
   file:

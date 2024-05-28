@@ -1,7 +1,7 @@
 # tmux_playbook.yml
 - block:
     - name: "Install tmux"
-      ansible.builtin.apt:
+      ansible.builtin.dnf:
         name: tmux
         state: present
       become: true
@@ -10,17 +10,17 @@
     - name: "Download .tmux.conf from GitHub"
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/probird5/dotfiles/main/.tmux.conf"
-        dest: "~/.tmux.conf"
+        dest: "/home/{{ ansible_user }}/.tmux.conf"
         mode: '0644'
       tags: tmux_config
 
     - name: "Clone TPM (Tmux Plugin Manager)"
       ansible.builtin.git:
         repo: "https://github.com/tmux-plugins/tpm"
-        dest: "~/.tmux/plugins/tpm"
+        dest: "/home/{{ ansible_user }}/.tmux/plugins/tpm"
         version: "master"
       tags: tmux_tpm
 
-  tags: 
+  tags:
     - tmux
 

@@ -10,12 +10,12 @@ fi
 USERNAME=$1
 
 # Update package list and upgrade existing packages
-apt update
-apt upgrade -y
+dnf update -y
 
 # Install Git and other essential packages
-apt install -y git sudo python3 ansible
+dnf install -y git sudo python3 ansible
 
+# Clone the Ansible repository
 git clone https://github.com/probird5/ansible.git
 
 cd ansible
@@ -29,5 +29,6 @@ sleep 3
 
 echo "Running ansible"
 
+# Run Ansible playbook with the provided username
 ansible-playbook local.yml -e "username=$USERNAME"
 

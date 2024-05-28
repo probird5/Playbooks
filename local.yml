@@ -3,10 +3,9 @@
     personal: "{{ lookup('env', 'HOME') }}/personal"
     username: "probird5"
   pre_tasks:
-  - name: Update Apt
+  - name: Update DNF
     become: true
-    apt:
-      force_apt_get: true
+    dnf:
       update_cache: true
       state: present
     tags:
@@ -18,3 +17,4 @@
     - import_tasks: tasks/1password.yml
     - import_tasks: tasks/tmux.yml
     - import_tasks: tasks/nvim.yml
+
