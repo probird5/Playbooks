@@ -53,31 +53,6 @@
     state: directory
     mode: '0755'
 
-- name: Copy Neovim configuration files
-  copy:
-    src: "{{ dotfiles_dir }}/.config/nvim/{{ item }}"
-    dest: "/home/{{ username }}/.config/nvim/{{ item }}"
-    mode: '0644'
-  loop:
-    - 'init.lua'
-    - 'lazy-lock.json'
-    - 'lua/plugins.lua'
-    - 'lua/alpha.lua'
-    - 'lua/autopairs.lua'
-    - 'lua/catppuccin.lua'
-    - 'lua/completions.lua'
-    - 'lua/debugging.lua'
-    - 'lua/lsp-config.lua'
-    - 'lua/lualine.lua'
-    - 'lua/mason.lua'
-    - 'lua/neo-tree.lua'
-    - 'lua/neotree.lua'
-    - 'lua/none-ls.lua'
-    - 'lua/telescope.lua'
-    - 'lua/tokyonight.lua'
-    - 'lua/treesitter.lua'
-    - 'lua/.luarc.json'
-    - 'lua/vim-options.lua'
 
 - name: Ensure proper permissions for Neovim config directory
   file:
