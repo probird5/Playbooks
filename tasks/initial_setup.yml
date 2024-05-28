@@ -17,6 +17,8 @@
       - xclip
       - feh
       - curl
+      - python3.11-venv
+      - clang-format
     state: present
 
 - name: Ensure user is present
